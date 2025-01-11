@@ -348,7 +348,9 @@ then this function does nothing."
 ;; Cursor color can only be set for each frame but not for each buffer.
 ;; FIXME: Shouldn't this belong in `evil-(local-)mode'?
 (add-hook 'window-configuration-change-hook #'evil-refresh-cursor)
-(advice-add 'select-window :after #'evil--sw-refresh-cursor)
+(if (boundp 'window-selection-change-functions)
+    (add-hook 'window-selection-change-functions #'evil--sw-refresh-cursor)
+  (advice-add 'select-window :after #'evil--sw-refresh-cursor))
 (defun evil--sw-refresh-cursor (&rest _)
   (evil-refresh-cursor))
 
